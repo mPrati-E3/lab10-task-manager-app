@@ -26,6 +26,7 @@ app.use(express.json());
 
 // Authentication endpoint
 app.post('/api/login', (req, res) => {
+
     const username = req.body.username;
     const password = req.body.password;
 
@@ -35,7 +36,7 @@ app.post('/api/login', (req, res) => {
         if(user === undefined) {
             res.status(404).send({
                 errors: [{ 'param': 'Server', 'msg': 'Invalid e-mail' }] 
-              });
+            });
         } else {
             if(!userDao.checkPassword(user, password)){
                 res.status(401).send({
@@ -57,8 +58,10 @@ app.post('/api/login', (req, res) => {
       );
   });
 
+// Parse the cookies
 app.use(cookieParser());
 
+// Logout by deeleting the cookie token
 app.post('/api/logout', (req, res) => {
     res.clearCookie('token').end();
 });
@@ -77,7 +80,9 @@ app.get('/api/tasks/public', (req, res) => {
        });
 });
 
-// For the rest of the code, all APIs require authentication
+// --------------------------------For the rest of the code, all APIs require authentication------------------------------------------------
+
+// This little function is mandatory to force all API to require the auth
 app.use(
     jwt({
       secret: jwtSecret,
@@ -91,8 +96,6 @@ app.use(function (err, req, res, next) {
       res.status(401).json(authErrorObj);
     }
   });
-
-// AUTHENTICATED REST API endpoints
 
 //GET /user
 app.get('/api/user', (req,res) => {

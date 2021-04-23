@@ -8,27 +8,33 @@ import Alert from'react-bootstrap/Alert';
 import {Redirect} from 'react-router-dom';
 import {AuthContext} from '../auth/AuthContext'
 
+// Component dedicated to handle the login form
 class LoginForm extends React.Component {
     
+    // Constructor to set the empty state
     constructor(props) {
         super(props);
         this.state = {username: '', password: '', submitted: false};
     }
 
+    // If I change the inserted username, I'll update the state
     onChangeUsername = (event) => {
         this.setState({username : event.target.value});
     }; 
     
+    // If I change the inserted password, I'll update the state
     onChangePassword = (event) => {
         this.setState({password : event.target.value});
     };
     
+    // Method to handle the submit of the form
     handleSubmit = (event, onLogin) => {
         event.preventDefault();
         onLogin(this.state.username,this.state.password);
         this.setState({submitted : true});
     }
 
+    // Mandatory render function to draw the user login form
     render() {
         if (this.state.submitted)
             return <Redirect to='/' />;
@@ -39,6 +45,8 @@ class LoginForm extends React.Component {
                 <Container fluid>
                     <Row>
                         <Col>
+
+                            {/* HEADER WITH ICON AND TITLE */}
                             <h2 className="ui teal image header">
                                 <svg className="bi bi-check-all" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                     <path fillRule="evenodd" d="M12.354 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L5 10.293l6.646-6.647a.5.5 0 01.708 0z" clipRule="evenodd"/>
@@ -50,20 +58,25 @@ class LoginForm extends React.Component {
                             </h2>
 
                             <Form method="POST" onSubmit={(event) => this.handleSubmit(event, context.loginUser)}>
+
+                                {/* E-MAIL */}
                                 <Form.Group controlId="username">
                                     <Form.Label>E-mail</Form.Label>
                                     <Form.Control type="email" name="email" placeholder="E-mail" value = {this.state.username} onChange={(ev) => this.onChangeUsername(ev)} required autoFocus/>
                                 </Form.Group>
 
+                                {/* PASSWORD */}
                                 <Form.Group controlId="password">
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control type="password" name="password" placeholder="Password" value = {this.state.password} onChange={(ev) => this.onChangePassword(ev)} required/>
                                 </Form.Group>
 
+                                {/* LOGIN BUTTON */}
                                 <Button variant="primary" type="submit">Login</Button>
 
                             </Form>
 
+                            {/* ERROR */}
                             {context.authErr && 
                             <Alert variant= "danger">
                                 {context.authErr.msg}

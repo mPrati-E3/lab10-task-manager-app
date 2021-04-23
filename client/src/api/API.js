@@ -1,6 +1,8 @@
 import Task from './Task';
 const baseURL = "/api";
 
+// Check if the actual user is auth or not by fetching from APIs
+// this is async so I have to use await
 async function isAuthenticated(){
     let url = "/user";
     const response = await fetch(baseURL + url);
@@ -13,6 +15,7 @@ async function isAuthenticated(){
     }
 }
 
+// Fetch all the tasks required from the APis - this is async so I have to use await
 async function getTasks(filter) {
     let url = "/tasks";
     if(filter){
@@ -30,6 +33,7 @@ async function getTasks(filter) {
     }
 }
 
+// Fetch all the public tasks from the APIs - this is async so I have to use await
 async function getPublicTasks() {
     let url = "/tasks/public";
 
@@ -44,6 +48,8 @@ async function getPublicTasks() {
     }
 }
 
+// Fetch the insertion of a task in the APis - this is async so I have to use a Promise and then
+// Here i have to manually create the fetch because it's a POST
 async function addTask(task) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + "/tasks", {
@@ -51,6 +57,7 @@ async function addTask(task) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            // JSON FORMAT CONVERT
             body: JSON.stringify(task),
         }).then( (response) => {
             if(response.ok) {
@@ -65,6 +72,8 @@ async function addTask(task) {
     });
 }
 
+// Fetch the update of a task in the APis - this is async so I have to use a Promise and then
+// Here i have to manually create the fetch because it's a PUT
 async function updateTask(task) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + "/tasks/" + task.id, {
@@ -72,6 +81,7 @@ async function updateTask(task) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            // JSON FORMAT CONVERT
             body: JSON.stringify(task),
         }).then( (response) => {
             if(response.ok) {
@@ -86,7 +96,8 @@ async function updateTask(task) {
     });
 }
 
-
+// Fetch the delete of a task in the APis - this is async so I have to use a Promise and then
+// Here i have to manually create the fetch because it's a DELETE but it's easy
 async function deleteTask(taskId) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + "/tasks/" + taskId, {
@@ -104,6 +115,8 @@ async function deleteTask(taskId) {
     });
 }
 
+// Fetch the user login in the APis - this is async so I have to use a Promise and then
+// Here i have to manually create the fetch because it's a POST
 async function userLogin(username, password) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + '/login', {
@@ -111,6 +124,7 @@ async function userLogin(username, password) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            // JSON FORMAT CONVERT
             body: JSON.stringify({username: username, password: password}),
         }).then((response) => {
             if (response.ok) {
@@ -127,6 +141,8 @@ async function userLogin(username, password) {
     });
 }
 
+// Fetch the user logout in the APis - this is async so I have to use a Promise and then
+// Here i have to manually create the fetch because it's a POST
 async function userLogout(username, password) {
     return new Promise((resolve, reject) => {
         fetch(baseURL + '/logout', {

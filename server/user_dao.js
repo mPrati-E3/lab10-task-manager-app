@@ -17,6 +17,7 @@ const createUser = function (row) {
     return new User(id, name, email, hash);
 }
 
+// Find an user in the db by using his e-mail - this is async so I have to use a Promise
 exports.getUser = function (email) {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM users WHERE email = ?"
@@ -33,6 +34,7 @@ exports.getUser = function (email) {
     });
   };
 
+// Find an user in the db by using his id - this is async so I have to use a Promise
 exports.getUserById = function (id) {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM users WHERE id = ?"
@@ -49,7 +51,7 @@ exports.getUserById = function (id) {
     });
   };
 
-
+// Chech if the user pw is ok by controlling hashing
 exports.checkPassword = function(user, password){
     console.log("hash of: " + password);
     let hash = bcrypt.hashSync(password, 10);

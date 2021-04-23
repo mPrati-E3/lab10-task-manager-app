@@ -4,10 +4,12 @@ import Image from 'react-bootstrap/Image';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Link } from 'react-router-dom' ;
 
+// Function that describe a single TodoItem
 const TodoItem = (props) => {
 
   let {mode,task, deleteTask, updateTask} = props;
 
+  // Handle the changing of the item
   const onChangeTask = (ev,task) => {
     if(ev.target.checked) {
       task.completed = true;
@@ -18,9 +20,12 @@ const TodoItem = (props) => {
     }
   }
 
+  // Return a TodoItem to be printed
   return (
     <ListGroup.Item id = {task.id}>
       <div className="d-flex w-100 justify-content-between">
+
+          {/* CHECKBOX & LABEL */}
           <div className="custom-control custom-checkbox">
             {mode === "private" && <input type="checkbox" className={task.important ? "custom-control-input important" : "custom-control-input"} id={"check-t" +  task.id} defaultChecked = {task.completed} onChange = {(ev) => onChangeTask(ev,task)}/>}
             {mode === "public" && <input type="checkbox" className={task.important ? "custom-control-input important" : "custom-control-input"} id={"check-t" +  task.id} defaultChecked = {task.completed} disabled />}
@@ -28,6 +33,8 @@ const TodoItem = (props) => {
             <label className="custom-control-label"  htmlFor={"check-t" +  task.id} >{task.description}</label>
             <span className="badge badge-success ml-4">{task.project}</span>
           </div>
+
+          {/* PRIVATE */}
           {!task.privateTask && mode === "public" &&
             <small>{task.user}</small>
           }
@@ -37,13 +44,17 @@ const TodoItem = (props) => {
                   <path fillRule="evenodd" d="M2 15v-1c0-1 1-4 6-4s6 3 6 4v1H2zm6-6a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
                 </svg>)}
 
-
+          {/* DATE */}
           {task.deadline &&  (
             <small className = {task.deadline.isBefore(moment()) ? "date bg-danger text-white" : "date"}>{task.deadline.format("dddd, MMMM Do YYYY, h:mm:ss a")} </small>
           )}
           
           {mode === "private" && <div>
+
+            {/* EDIT */}
             <Link to ={`/task/${task.id}`}><Image width="20" height="20" className="img-button" src="/svg/edit.svg" alt ="" /*onClick={() => editTask(task)}*//></Link>
+
+            {/* DELETE */}
             <Image width="20" height="20" className="img-button" src="/svg/delete.svg" alt ="" onClick={() => deleteTask(task)}/>
           </div>}
 

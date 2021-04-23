@@ -1,3 +1,4 @@
+//bean
 class User{    
     constructor(id, name, email, hash) {
         if(id)

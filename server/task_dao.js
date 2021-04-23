@@ -4,6 +4,7 @@ const Task = require('./task');
 const db = require('./db');
 const moment = require('moment');
 
+// Function to create a new task
 const createTask = function (row) {
     const importantTask = (row.important === 1) ? true : false;
     const privateTask = (row.private === 1) ? true : false; 
@@ -11,20 +12,19 @@ const createTask = function (row) {
     return new Task(row.tid, row.description, importantTask, privateTask, row.deadline, row.project, completedTask, row.email);
 }
 
+// Check if the task is scheduled for today
 const isToday = function(date) {
     return moment(date).isSame(moment(), 'day');
 }
 
+// Check if the task is scheduled for next week
 const isNextWeek = function(date) {
     const nextWeek = moment().add(1, 'weeks');
     const tomorrow = moment().add(1, 'days');
     return moment(date).isAfter(tomorrow) && moment(date).isBefore(nextWeek);
 }
 
-
-/**
- * Get public tasks 
- */
+// Get all public tasks from the db - this is async so I have to use a Promise
 exports.getPublicTasks = function() {
     return new Promise((resolve, reject) => {
         const sql = "SELECT t.id as tid, t.description, t.important, t.private, t.project, t.deadline,t.completed, t.user, u.name, u.email FROM tasks as t, users as u WHERE t.user = u.id AND t.private = 0";
@@ -39,11 +39,7 @@ exports.getPublicTasks = function() {
     });
 }
 
-
-
-/**
- * Get tasks and optionally filter them
- */
+// Get all the tasks of an user from the db and optionally filter them - this is async so I have to use a Promise
 exports.getTasks = function(user, filter) {
     return new Promise((resolve, reject) => {
         const sql = "SELECT t.id as tid, t.description, t.important, t.private, t.project, t.deadline,t.completed, t.user, u.name, u.email FROM tasks as t, users as u WHERE t.user = u.id AND t.user = ?";
@@ -98,9 +94,7 @@ exports.getTasks = function(user, filter) {
     });
 }
 
-/**
- * Get a task with given 
- */
+// Get a task by given id from the db - this is async so I have to use a Promise
 exports.getTask = function(id) {
     return new Promise((resolve, reject) => {
         const sql = "SELECT * FROM tasks WHERE id = ?";
@@ -117,9 +111,7 @@ exports.getTask = function(id) {
     });
 }
 
-/**
- * Delete a task with a given id
- */
+// Delete a task from the db - this is async so I have to use a Promise
 exports.deleteTask = function(id) {
     return new Promise((resolve, reject) => {
         const sql = 'DELETE FROM tasks WHERE id = ?';
@@ -132,10 +124,8 @@ exports.deleteTask = function(id) {
     });
 }
 
-/**
- * Insert a task in the database and returns the id of the inserted task. 
- * To get the id, this.lastID is used. To use the "this", db.run uses "function (err)" instead of an arrow function.
- */
+// Insert a task in the db - this is async so I have to use a Promise 
+// To get the id, this.lastID is used. To use the "this", db.run uses "function (err)" instead of an arrow function.
 exports.createTask = function(task) {
     if(task.deadline){
         task.deadline = moment(task.deadline).format("YYYY-MM-DD HH:mm");
@@ -155,9 +145,7 @@ exports.createTask = function(task) {
     });
 }
 
-/**
- * Update an existing task with a given id. newTask contains the new values of the task (e.g., to mark it as "completed")
- */
+// Update a task in the db by given id and new task - this is async so I have to use a Promise
 exports.updateTask = function(id, newTask) {
     if(newTask.deadline){
         newTask.deadline = moment(newTask.deadline).format("YYYY-MM-DD HH:mm");

@@ -16,15 +16,18 @@ import {Switch} from 'react-router';
 import {AuthContext} from './auth/AuthContext';
 import { withRouter } from 'react-router-dom';
 
+// Component that describe the entire App
 class App extends React.Component {
   
+  // Construct to set the empty state
   constructor(props)  {
     super(props);
     this.state = {tasks: [], projects: [], filter: 'all', openMobileMenu: false, editedTask: null};
   }
 
+  // If the user is logged in (calling the API to check it), then Mount the application
+  // this is async so I have to use then
   componentDidMount() {
-    //check if the user is authenticated
     API.isAuthenticated().then(
       (user) => {
         this.setState({authUser: user});
@@ -35,6 +38,7 @@ class App extends React.Component {
     });
   }
 
+  // Method to handle errors my updating the state
   handleErrors(err) {
     if (err) {
         if (err.status && err.status === 401) {
@@ -44,7 +48,7 @@ class App extends React.Component {
     }
 }
 
-  // Add a logout method
+  // Logout method using APIs - this is async so I have to use then
   logout = () => {
     API.userLogout().then(() => {
       this.setState({authUser: null,authErr: null, tasks: null});
@@ -52,7 +56,7 @@ class App extends React.Component {
     });
   }
 
-  // Add a login method
+  // Login method using APIs - this is async so I have to use then
   login = (username, password) => {
     API.userLogin(username, password).then(
       (user) => { 
@@ -73,6 +77,7 @@ class App extends React.Component {
     );
   }
 
+  // Method to get all the projects
   getProjects(tasks) {
     return [...new Set(tasks.map((task) => {
       if(task.project)
@@ -82,10 +87,12 @@ class App extends React.Component {
     }))];
   }
 
+  // Method to show the sidebar from mobile
   showSidebar = () => {
     this.setState((state) => ({openMobileMenu: !state.openMobileMenu}));
   }
 
+  // Get all the public tasks from the APis - this is async so I have to use then
   getPublicTasks = () => {
     API.getPublicTasks()
       .then((tasks) => this.setState({tasks: tasks}))
@@ -94,6 +101,7 @@ class App extends React.Component {
       });
   }
 
+  // FIlter the tasks using APIs - this is async so I have to use then
   filterTasks = (filter) => {
     if(filter === "all"){
       API.getTasks()
@@ -112,6 +120,7 @@ class App extends React.Component {
     }
   }
 
+  // Add or edit a task using APIs - this is async so I have to use then
   addOrEditTask = (task) => {
     if(!task.id){
       //ADD
@@ -136,10 +145,12 @@ class App extends React.Component {
     }
   }
 
+  // Method to set in the state the edited task
   editTask = (task) => {
     this.setState({editedTask: task});
   }
 
+  // Delete a task using APIs - this is async so I have to use then
   deleteTask = (task) => {
     API.deleteTask(task.id)
       .then(() => {
@@ -151,7 +162,9 @@ class App extends React.Component {
       });
   }
   
+  // Mandatory render function to draw the entire App
   render() {
+
     // compose value prop as object with user object and logout method
     const value = {
       authUser: this.state.authUser,
@@ -160,13 +173,17 @@ class App extends React.Component {
       logoutUser: this.logout
     }
     return(
+
       <AuthContext.Provider value={value}>
         
+        {/* SIDEBAR */}
         <Header showSidebar={this.showSidebar} getPublicTasks = {this.getPublicTasks}/>
 
         <Container fluid>
 
           <Switch>
+
+            {/* LOGIN */}
             <Route path="/login">
               <Row className="vheight-100">
                 <Col sm={4}></Col>
@@ -176,6 +193,7 @@ class App extends React.Component {
               </Row>
             </Route>
 
+            {/* PUBLIC TASKS */}
             <Route path="/public">
               <Row className="vheight-100">
                 <Col sm={12} className="below-nav"> 
@@ -185,6 +203,7 @@ class App extends React.Component {
               </Row>
             </Route>
 
+            {/* TASKS LEFT SIDEBAR */}
             <Route path="/tasks">
               <Row className="vheight-100">
                 <Switch>
@@ -205,6 +224,7 @@ class App extends React.Component {
                       
                 </Switch>
 
+                {/* TASK TABLE */}
                 <Col sm={8} className="below-nav"> 
                   <h5><strong>Filter: </strong>{this.state.filter}</h5>
                   <TodoList  mode = "private" tasks = {this.state.tasks} editTask = {this.editTask} updateTask = {this.addOrEditTask} deleteTask = {this.deleteTask} />
@@ -216,9 +236,12 @@ class App extends React.Component {
             <Route path="/add">
               <Row className="vheight-100">
                 <Col sm={4}></Col>
+
+                {/* UPDATE FORM */}
                 <Col sm={4} className="below-nav"> 
                   <TodoForm addOrEditTask={this.addOrEditTask}/>
                 </Col>
+                
               </Row>
             </Route>
 

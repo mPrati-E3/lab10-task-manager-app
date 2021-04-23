@@ -6,7 +6,10 @@ import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router-dom';
 import {AuthContext} from '../auth/AuthContext'
 
+// Component that describe the popup form 
 class TodoForm extends React.Component {
+
+  // Constructor to set the state with given props or empty
   constructor(props) {
     super(props);
     if(this.props.task){
@@ -22,10 +25,12 @@ class TodoForm extends React.Component {
     this.state.submitted = false;
   }
 
+  // Handle the updating of a field of the form
   updateField = (name, value) => {
     this.setState({[name]: value});
   }
 
+  // Handle the submit of the form 
   handleSubmit = (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -44,6 +49,7 @@ class TodoForm extends React.Component {
     }
   }
 
+  // Mandatory render function to return the form
   render() {
     if (this.state.submitted)
       return <Redirect to='/' />;
@@ -51,28 +57,36 @@ class TodoForm extends React.Component {
       <AuthContext.Consumer>
       {(context) => (
         <>
+
+          {/* TITLES */}
           {!this.props.task && <h1>Add a Task</h1>}
           {this.props.task && <h1>Update Task</h1>}
 
           <Form method="POST" onSubmit={(event) => this.handleSubmit(event)}>
+
+              {/* DESCRIPTION */}
               <Form.Group controlId="description">
                 <Form.Label>Description</Form.Label>
                 <Form.Control type="text" name="description" placeholder="Type a description..." value = {this.state.description} onChange={(ev) => this.updateField(ev.target.name, ev.target.value)} required autoFocus/>
               </Form.Group>
 
+              {/* PROJECT */}
               <Form.Group controlId="project">
                 <Form.Label>Project</Form.Label>
                 <Form.Control type="text" name="project" placeholder="Type a project for the task..." value = {this.state.project} onChange={(ev) => this.updateField(ev.target.name, ev.target.value)}/>
               </Form.Group>
 
+              {/* IMPORTANT */}
               <Form.Group controlId="important">
                 <Form.Check type="checkbox" label="Important" id="important" name="important" checked = {this.state.important} onChange={(ev) => this.updateField(ev.target.name, ev.target.checked)} />
               </Form.Group>
 
+              {/* PRIVATE */}
               <Form.Group controlId="private">
                 <Form.Check type="checkbox" label="Private" id="private" name="privateTask" onChange={(ev) => this.updateField(ev.target.name, ev.target.checked)} checked={this.state.privateTask}/>
               </Form.Group>
 
+              {/* DATE */}
               <Form.Group controlId="deadline-date">
                 <Form.Label>Deadline</Form.Label>
                 <Form.Control type="date" name="deadlineDate" value = {this.state.deadlineDate} onChange={(ev) => this.updateField(ev.target.name, ev.target.value)}/>

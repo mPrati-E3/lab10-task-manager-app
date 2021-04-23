@@ -6,6 +6,7 @@ import Nav from 'react-bootstrap/Nav';
 import {AuthContext} from '../auth/AuthContext'
 import {NavLink} from 'react-router-dom';
 
+// Function to describe the header of the application
 const Header = (props) => {
 
   return(
@@ -15,6 +16,7 @@ const Header = (props) => {
       <Navbar bg="success" variant="dark" expand="sm" fixed="top">
         <Navbar.Toggle aria-controls="left-sidebar" aria-expanded="false" aria-label="Toggle sidebar" onClick={props.showSidebar}/>
 
+        {/* LOGO & TITLE */}
         <Navbar.Brand href="index.html">
           <svg className="bi bi-check-all" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path fillRule="evenodd" d="M12.354 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L5 10.293l6.646-6.647a.5.5 0 01.708 0z" clipRule="evenodd"/>
@@ -23,15 +25,18 @@ const Header = (props) => {
           ToDO Manager
         </Navbar.Brand>
         
+        {/* NAV */}
         <Nav className="mr-auto">
           <Nav.Link as={NavLink} to="/tasks">My Tasks</Nav.Link> 
           <Nav.Link as={NavLink} to="/public" onClick = {() => props.getPublicTasks()}> Public Tasks</Nav.Link> 
         </Nav>
         
+        {/* SEARCH */}
         <Form inline className="my-2 my-lg-0 mx-auto d-none d-sm-block" role="search">
           <FormControl type="search" className="mr-sm-2" placeholder="Search" aria-label="Search query" />
         </Form>
 
+        {/* LOGIN */}
         <Nav className="ml-md-auto">
           {context.authUser && 
             <>
